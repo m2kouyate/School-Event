@@ -1,0 +1,48 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'school_event_app/assets/css/main.css' %}">
+
+{% block content %}
+<div class="profile-page">
+  <h2>Profile Detail</h2>
+
+  {% if profile.profile_picture %}
+    <div>
+      <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" style="width: 150px; height: 150px;">
+    </div>
+  {% else %}
+    <div>
+      <strong>Profile Picture:</strong> None
+    </div>
+  {% endif %}
+
+  <div>
+    <strong>Username:</strong> {{ profile.user.username }}
+  </div>
+
+  <div>
+    <strong>First Name:</strong> {{ profile.user.first_name }}
+  </div>
+
+  <div>
+    <strong>Last Name:</strong> {{ profile.user.last_name }}
+  </div>
+
+  <div>
+    <strong>Email:</strong> {{ profile.user.email }}
+  </div>
+
+  <div>
+    <strong>About:</strong>
+    {% if profile.about %}
+      {{ profile.about }}
+    {% else %}
+      Not provided
+    {% endif %}
+  </div>
+
+  <a href="{% url 'app_users:profile_edit' profile.pk %}">Edit Profile</a>
+  <a href="{% url 'app_users:profile_delete' profile.pk %}">Delete Profile</a>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="event-type-delete-page">
+  <h1>Are you sure you want to delete "{{ object.name }}"?</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, delete</button>
+  </form>
+
+  <a href="{% url 'school_event_app:eventtype_detail' object.pk %}">No, take me back</a>
+</div>
+{% endblock %}

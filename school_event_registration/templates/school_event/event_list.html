@@ -1,0 +1,58 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="event-list">
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'school_event_app:event_create' %}" class="create-link">Create new event</a> -
+    <a href="{% url 'school_event_app:event_import' %}" class="create-link">Import new events</a>
+    {% if user.is_superuser %}
+      - <a href="{% url 'school_event_app:event_type_create' %}" class="create-link">Create new event type</a>
+    {% endif %}
+  {% endif %}
+
+  <form method="GET" action="">
+    <label for="date_from">Filter by date (from):</label>
+    <input type="date" id="date_from" name="date_from" value="{{ request.GET.date_from }}">
+
+    <label for="date_to">Filter by date (to):</label>
+    <input type="date" id="date_to" name="date_to" value="{{ request.GET.date_to }}">
+
+    <label for="event_type">Filter by event type:</label>
+    <select id="event_type" name="event_type">
+      <option value="">All</option>
+      {% for event_type in event_types %}
+        <option value="{{ event_type.name }}" {% if request.GET.event_type == event_type.name %}selected{% endif %}>{{ event_type.name }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Filter</button>
+  </form>
+
+  {% if date_error %}
+    <p style="color: red;">{{ date_error }}</p>
+  {% endif %}
+
+  <button id="toggle-events-btn">Show Old Events</button>
+
+  <h2>Events:</h2>
+  {% if object_list %}
+    <ul>
+      {% for event in object_list %}
+        <li class="event-item" data-date="{{ event.date_and_time.isoformat }}">
+          <a href="{% url 'school_event_app:event_detail' event.pk %}">{{ event.name }}</a>
+          - {{ event.date_and_time }}
+          - {{ event.location }}
+          {% if event.created_by == user %}
+            - <a href="{% url 'school_event_app:event_edit' event.pk %}">Edit</a>
+            - <a href="{% url 'school_event_app:event_delete' event.pk %}">Delete</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <button id="show-more-btn">Show More</button>
+  {% else %}
+    <p>No events available at the moment.</p>
+  {% endif %}
+</div>
+{% endblock %}

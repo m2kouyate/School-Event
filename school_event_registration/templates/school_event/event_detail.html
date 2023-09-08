@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="event-detail">
+  <h1>{{ object.name }}</h1>
+  {% if object.created_by == user %}
+    <p>
+      <a href="{% url 'school_event_app:event_edit' object.pk %}">Edit this event</a> -
+      <a href="{% url 'school_event_app:event_delete' object.pk %}" class="delete-link">Delete this event</a>
+    </p>
+  {% endif %}
+  {% if object.event_type %}
+    <p><strong>Event Type:</strong> {{ object.event_type.name }}</p>
+  {% endif %}
+  <p><strong>Location:</strong> {{ object.location }}</p>
+  <p><strong>Description:</strong> {{ object.description }}</p>
+  <p><strong>Date and Time:</strong> {{ object.date_and_time }}</p>
+  <p><strong>Maximum Participants:</strong> {{ object.max_participants }}</p>
+
+  {% if object.created_by %}
+    <p><strong>Contact:</strong> {{ object.created_by.email }} </p>
+  {% endif %}
+  <p>Registration: <a href="{% url 'school_event_app:participant_create' event.pk %}" class="registration-link">Register for this event</a></p>
+
+  <h2>Event Images:</h2>
+    <div class="event-images-container">
+      {% if object.images.all %}
+        {% for image in object.images.all %}
+          <a href="{{ image.image.url }}" data-lightbox="event-images" data-title="Event Image">
+            <img src="{{ image.image.url }}" alt="Event Image">
+          </a>
+        {% endfor %}
+      {% else %}
+        <p>No images uploaded for this event.</p>
+      {% endif %}
+    </div>
+
+  {% if object.created_by == user %}
+    <h3>Participants:</h3>
+    <ul>
+        {% for participant in participants %}
+            <li>
+                <strong>Name:</strong> {{ participant.first_name }} {{ participant.last_name }}<br>
+                <strong>Email:</strong> {{ participant.email }}<br>
+                <strong>Telephone:</strong> {{ participant.phone_number }}<br>
+                {% if participant.profile_picture %}
+                    <img src="{{ participant.profile_picture.url }}" alt="Profile Picture" style="width: 50px; height: 50px;">
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No participants have registered for this event yet.</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="event-type-detail-page">
+  <h1>{{ object.name }}</h1>
+  <p>{{ object.description }}</p>
+
+  {% if user.is_superuser %}
+    <a href="{% url 'school_event_app:event_type_edit' object.pk %}">Edit this event type</a>
+    <a href="{% url 'school_event_app:event_type_delete' object.pk %}">Delete this event type</a>
+  {% endif %}
+</div>
+{% endblock %}

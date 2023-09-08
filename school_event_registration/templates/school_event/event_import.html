@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div class="import-page">
+  <h1>Import Events</h1>
+
+  <p>The CSV file should contain the following fields in this order: Name, Date and Time (YYYY-MM-DD HH:MM), Location, Description, Max Participants, Image Filenames (separated by semicolons).</p>
+
+  <p>Example:</p>
+  <pre>
+  Event Name,2023-09-01 14:00:00,New York City Hall,This is a description of the event,100,image1.jpg;image2.jpg
+  </pre>
+
+  <p>Notes:</p>
+  <ul>
+    <li>The images with filenames "image1.jpg" and "image2.jpg" should be included in the file upload section for images.</li>
+    <li>The allowed image formats are: JPG, PNG.</li>
+  </ul>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Import</button>
+  </form>
+
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}
