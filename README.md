@@ -49,8 +49,8 @@ The objective of this project was to develop a web application using the Django 
 
 
 ## Running the Application
-1. Create a superuser: `python3 manage.py createsuperuser`
-2. Apply the migrations: `python3 manage.py migrate`
+1. Apply the migrations: `python3 manage.py migrate`
+2. Create a superuser: `python3 manage.py createsuperuser`
 3. Run the server: `python3 manage.py runserver`
 4. Access the application at: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
