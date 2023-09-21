@@ -14,13 +14,25 @@
   {% endif %}
   <p><strong>Location:</strong> {{ object.location }}</p>
   <p><strong>Description:</strong> {{ object.description }}</p>
-  <p><strong>Date and Time:</strong> {{ object.date_and_time }}</p>
+  <p><strong>Date and Time:</strong><span id="eventDateTime"> {{ object.date_and_time }} </span></p>
   <p><strong>Maximum Participants:</strong> {{ object.max_participants }}</p>
 
   {% if object.created_by %}
     <p><strong>Contact:</strong> {{ object.created_by.email }} </p>
   {% endif %}
-  <p>Registration: <a href="{% url 'school_event_app:participant_create' event.pk %}" class="registration-link">Register for this event</a></p>
+    {% if not is_past_event %}
+      {% if not registration_closed %}
+        {% if user != object.created_by %}
+          <p>Registration: <a href="{% url 'school_event_app:participant_create' object.pk %}" class="registration-link">Register for this event</a></p>
+        {% else %}
+          <p>You are the creator of this event.</p>
+        {% endif %}
+      {% else %}
+        <p>Registration for this event is closed.</p>
+      {% endif %}
+    {% else %}
+      <p>This event has passed.</p>
+    {% endif %}
 
   <h2>Event Images:</h2>
     <div class="event-images-container">
@@ -40,7 +52,12 @@
     <ul>
         {% for participant in participants %}
             <li>
-                <strong>Name:</strong> {{ participant.first_name }} {{ participant.last_name }}<br>
+                <strong>Name:</strong>
+                {% if participant.user.profile %}
+                    <a href="{% url 'app_users:profile_detail' participant.user.profile.id %}">{{ participant.first_name }} {{ participant.last_name }}</a><br>
+                {% else %}
+                    {{ participant.first_name }} {{ participant.last_name }}<br>
+                {% endif %}
                 <strong>Email:</strong> {{ participant.email }}<br>
                 <strong>Telephone:</strong> {{ participant.phone_number }}<br>
                 {% if participant.profile_picture %}

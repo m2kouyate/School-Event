@@ -4,6 +4,7 @@ from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 
@@ -56,7 +57,13 @@ class EventDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = self.get_object()
-        context['participants'] = Participant.objects.filter(event=event).select_related('user')
+        participants = Participant.objects.filter(event=event).select_related('user')
+        context['participants'] = participants
+
+        context['is_past_event'] = event.date_and_time < timezone.now()
+
+        if event.max_participants and participants.count() >= event.max_participants:
+            context['registration_closed'] = True
         return context
 
 

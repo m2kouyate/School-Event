@@ -42,7 +42,9 @@
     {% endif %}
   </div>
 
-  <a href="{% url 'app_users:profile_edit' profile.pk %}">Edit Profile</a>
-  <a href="{% url 'app_users:profile_delete' profile.pk %}">Delete Profile</a>
+  {% if user == profile.user %}
+    <a href="{% url 'app_users:profile_edit' profile.pk %}">Edit Profile</a>
+    <a href="{% url 'app_users:profile_delete' profile.pk %}">Delete Profile</a>
+  {% endif %}
 </div>
 {% endblock %}
